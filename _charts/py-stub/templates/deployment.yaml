@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "py-stub.fullname" . }}
+  labels:
+    {{- include "py-stub.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "py-stub.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "py-stub.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.image.port }}
+          env:
+            - name: TZ
+              value: "Europe/Moscow"
+            - name: TYPE
+              value: "EXTENDED"
+            - name: PORT
+              value: "8022"
+            - name: TIMEOUT
+              value: "10"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "py-stub.fullname" . }}
+  labels:
+    {{- include "py-stub.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.image.port }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "py-stub.selectorLabels" . | nindent 4 }}
+status:
+  loadBalancer:
+    ingress:
+      - hostname: localhost

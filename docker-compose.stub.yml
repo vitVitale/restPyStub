@@ -1,0 +1,23 @@
+version: "3.0"
+services:
+  stub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    image: vitvitale/rest_py_stub:1.1.0
+    container_name: stub
+    ports:
+      - '8022:8022'
+    restart: 'no'
+    networks:
+      - ST_network
+    environment:
+      TZ: Europe/Moscow
+      TYPE: EXTENDED
+#      TYPE: DEFAULT
+      PORT: 8022
+      TIMEOUT: 10
+
+networks:
+  ST_network:
+    external: true
